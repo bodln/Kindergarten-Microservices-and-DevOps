@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nannies-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nanniesservice
+  template:
+    metadata:
+      labels:
+        app: nanniesservice
+    spec:
+      containers:
+        - name: nanniesservice
+          image: omersadikovic/nanniesservice:latest
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nannies-clusterip-srv
+spec:
+  type: ClusterIP
+  selector:
+    app: nanniesservice
+  ports:
+  - name: nanniesservice
+    protocol: TCP
+    port: 8080
+    targetPort: 8080
+  # - name: plafromgrpc
+  #   protocol: TCP
+  #   port: 666
+  #   targetPort: 666
