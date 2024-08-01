@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: events-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: eventsservice
+  template:
+    metadata:
+      labels:
+        app: eventsservice
+    spec:
+      containers:
+        - name: eventsservice
+          image: omersadikovic/eventsservice:latest
+          env:
+            - name: MONGODB_CONNECTION_STRING
+              value: "mongodb://mongodb-clusterip-srv:27017"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: events-clusterip-srv
+spec:
+  type: ClusterIP
+  selector:
+    app: eventsservice
+  ports:
+  - name: eventsservice
+    protocol: TCP
+    port: 8080
+    targetPort: 8080
+  # - name: plafromgrpc
+  #   protocol: TCP
+  #   port: 666
+  #   targetPort: 666
