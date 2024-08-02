@@ -1,0 +1,23 @@
+syntax = "proto3";
+
+package proto;
+
+option go_package = "./proto;proto";
+
+//protoc --go_out=. --go-grpc_out=. proto/assess_student.proto
+
+message Student {
+  int32 student_id = 1;
+  int32 age = 2;
+  int32 grade = 3;
+  int32 event_id = 4;
+  string token = 5;
+}
+
+message AssessmentResponse {
+  bool approved = 1;
+}
+
+service AssessStudentService {
+  rpc AssessStudent(Student) returns (AssessmentResponse);
+}
