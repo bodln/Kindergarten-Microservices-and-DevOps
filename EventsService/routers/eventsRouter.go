@@ -1,21 +1,24 @@
 package routers
 
 import (
-	"EventsService/controllers"
-
-	"github.com/gin-gonic/gin"
+    "EventsService/controllers"
+    "EventsService/middleware"
+    "github.com/gin-gonic/gin"
 )
 
 func EventsRouter() *gin.Engine {
-	router := gin.Default()
+    router := gin.Default()
 
-	eventsGroup := router.Group(EventsBaseRoute)
-	{
-		eventsGroup.POST("/Arrange", eventsController.ArrangeEvent)
-		eventsGroup.DELETE("/Cancel/:id", eventsController.CancelEvent)
-		eventsGroup.GET("/GetAll", eventsController.GetAllEvents)
-		eventsGroup.POST("/:eventId/Invite/:studentId", eventsController.InviteStudent)
-	}
+    // Apply JWT middleware to all routes
+    router.Use(middleware.JWTMiddleware())
 
-	return router
+    eventsGroup := router.Group(EventsBaseRoute)
+    {
+        eventsGroup.POST("/Arrange", middleware.RequireRoles("Nanny"), eventsController.ArrangeEvent)
+        eventsGroup.DELETE("/Cancel/:id", middleware.RequireRoles("Nanny"), eventsController.CancelEvent)
+        eventsGroup.GET("/GetAll", middleware.RequireRoles("Nanny", "Admin"), eventsController.GetAllEvents)
+        eventsGroup.POST("/:eventId/Invite/:studentId", middleware.RequireRoles("Nanny"), eventsController.InviteStudent)
+    }
+
+    return router
 }
