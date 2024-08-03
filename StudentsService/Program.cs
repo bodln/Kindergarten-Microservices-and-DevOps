@@ -11,6 +11,7 @@ using StudentsService.Data;
 using StudentsService.Repositories;
 using StudentsService.EventProcessing;
 using StudentsService.AsyncDataServices;
+using StudentsService.SyncDataServices.Grpc;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -29,6 +30,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 builder.Services.AddScoped<IStudentRepository, StudentRepository>();
 builder.Services.AddSingleton<IEventProcessor, EventProcessor>();
+builder.Services.AddScoped<IEventDataClient, EventDataClient>();
 
 builder.Services.AddAuthentication(options =>
 {
