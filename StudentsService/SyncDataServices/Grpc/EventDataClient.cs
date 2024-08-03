@@ -12,7 +12,7 @@ namespace StudentsService.SyncDataServices.Grpc
             _configuration = configuration;
         }
 
-        public async Task<bool> Participate(string token, int studentId, string eventId)
+        public async Task<bool> Participate(string token, int studentId, string eventId, int grade)
         {
             Console.WriteLine("--> Calling gRPC Service: " + _configuration["GrpcPlatform"]);
 
@@ -26,10 +26,15 @@ namespace StudentsService.SyncDataServices.Grpc
             {
                 StudentId = studentId,
                 EventId = eventId,
-                Token = token
+                Token = token,
+                Grade = grade
             };
 
+            Console.WriteLine("--> Sending gRPC Request: " + request);
+
             var response = await client.AssessStudentAsync(request);
+
+            Console.WriteLine("--> Recieved gRPC Response: " + response);
 
             return response.Approved; 
         }

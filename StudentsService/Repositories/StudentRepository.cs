@@ -102,7 +102,14 @@ namespace StudentsService.Repositories
 
         public async Task<bool> Participate(string token, int studentId, string eventId)
         {
-            return await _eventDataClient.Participate(token, studentId, eventId);
+            Student s = _context.Students.Find(studentId);
+
+            if (s == null)
+            {
+                return false;
+            }
+
+            return await _eventDataClient.Participate(token, studentId, eventId, s.Grade);
         }
     }
 
