@@ -3,11 +3,15 @@ package middleware
 import (
     "github.com/gin-gonic/gin"
     "net/http"
+    "log"
 )
 
 func RequireRoles(roles ...string) gin.HandlerFunc {
     return func(c *gin.Context) {
         userRoles, exists := c.Get("roles")
+
+        log.Printf("userRoles: %v", userRoles)
+
         if !exists {
             c.JSON(http.StatusForbidden, gin.H{"error": "Roles not found"})
             c.Abort()

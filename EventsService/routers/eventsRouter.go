@@ -16,7 +16,7 @@ func EventsRouter() *gin.Engine {
     {
         eventsGroup.POST("/Arrange", middleware.RequireRoles("Nanny"), eventsController.ArrangeEvent)
         eventsGroup.DELETE("/Cancel/:id", middleware.RequireRoles("Nanny"), eventsController.CancelEvent)
-        eventsGroup.GET("/GetAll", middleware.RequireRoles("Nanny", "Admin"), eventsController.GetAllEvents)
+        eventsGroup.GET("/GetAll", middleware.RequireRoles("Admin"), eventsController.GetAllEvents)
         eventsGroup.POST("/:eventId/Invite/:studentId", middleware.RequireRoles("Nanny"), eventsController.InviteStudent)
     }
 
