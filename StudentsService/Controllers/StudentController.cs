@@ -110,4 +110,13 @@ public class StudentController : ControllerBase
             return BadRequest(ex.Message);
         }
     }
+
+    [HttpPost("{studentId:int}/Participate/{eventId:int}")]
+    [Authorize(Roles = "Nanny")]
+    public async Task<IActionResult> GradeStudent(int studentId, int eventId)
+    {
+        string token = HttpContext.Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
+        var response = await _studentRepository.Participate(token, studentId, eventId);
+        return response ? Ok("Student: " + studentId + ", participated in event: " + eventId) : NotFound("Student participation denied...");
+    }
 }

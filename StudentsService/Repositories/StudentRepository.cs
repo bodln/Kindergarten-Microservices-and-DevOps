@@ -4,16 +4,21 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+using StudentsService.SyncDataServices.Grpc;
 
 namespace StudentsService.Repositories
 {
     public class StudentRepository : IStudentRepository
     {
         private readonly AppDbContext _context;
+        private readonly IEventDataClient _eventDataClient;
 
-        public StudentRepository(AppDbContext context)
+        public StudentRepository(AppDbContext context,
+            IEventDataClient eventDataClient)
         {
             _context = context;
+            _eventDataClient = eventDataClient;
         }
 
         public async Task<Student> CreateStudent(StudentDTO studentDTO)
@@ -94,6 +99,11 @@ namespace StudentsService.Repositories
             await _context.SaveChangesAsync();
             return true;
         }
+
+        public async Task<bool> Participate(string token, int studentId, int eventId)
+        {
+            return await _eventDataClient.Participate(token, studentId, eventId);
+        }
     }
 
 
@@ -105,6 +115,7 @@ namespace StudentsService.Repositories
         Task<Student?> UpdateStudent(int id, StudentDTO studentDTO);
         Task<bool> DeleteStudent(int id);
         Task<bool> GradeStudent(int id, int grade, string nannyEmail);
+        Task<bool> Participate(string token, int studentId, int eventId);
     }
 
 
