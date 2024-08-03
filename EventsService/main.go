@@ -2,13 +2,14 @@ package main
 
 import (
 	"context"
-	"fmt" // Add this import for fmt
+	"fmt" 
 	//"EventsService/controllers"
 	"EventsService/routers"
-	"EventsService/proto" // Update the import path to match your project structure
+	"EventsService/proto" 
 	"log"
 	"net"
 	"net/http"
+	"os"
 
 	"github.com/joho/godotenv"
 	"github.com/gin-gonic/gin"
@@ -22,17 +23,25 @@ type server struct {
 func (s *server) AssessStudent(ctx context.Context, req *proto.Student) (*proto.AssessmentResponse, error) {
 	approved := req.GetGrade() > 1
 
+	log.Printf("gRPC Server received: %v", req)
+	log.Printf("approved: %v", approved)
+
 	if approved {
 		studentID := req.GetStudentId()
 		eventID := req.GetEventId()
 		token := req.GetToken() 
 
-		url := fmt.Sprintf("/api/Event/%d/Invite/%d", eventID, studentID)
+		baseURL := os.Getenv("EVENTS_BASE_URL")
+		url := fmt.Sprintf("%s/api/Event/%s/Invite/%d", baseURL, eventID, studentID)
+
+		log.Printf("url: %v", url)
 
 		httpReq, err := http.NewRequest("POST", url, nil)
 		if err != nil {
 			log.Printf("Failed to create HTTP request: %v", err)
 			return &proto.AssessmentResponse{Approved: false}, nil
+		}else{
+			log.Printf("Post request made: %v", httpReq)
 		}
 
 		httpReq.Header.Set("Authorization", "Bearer "+token)
@@ -42,15 +51,22 @@ func (s *server) AssessStudent(ctx context.Context, req *proto.Student) (*proto.
 		if err != nil {
 			log.Printf("Failed to send HTTP request: %v", err)
 			return &proto.AssessmentResponse{Approved: false}, nil
+		}else{
+			log.Printf("Post request sent: %v", httpReq)
 		}
+
 		defer resp.Body.Close()
 
 		if resp.StatusCode != http.StatusOK {
 			log.Printf("Failed to invite student, received status code: %d", resp.StatusCode)
 			return &proto.AssessmentResponse{Approved: false}, nil
+		}else{
+			log.Printf("Student invited.")
 		}
 
-		log.Printf("Student with ID %d successfully invited to event with ID %d", studentID, eventID)
+		log.Printf("Student with ID %d successfully invited to event with ID %s", studentID, eventID)
+	}else{
+		log.Printf("Student participation denied due to insufficient grade.")
 	}
 
 	return &proto.AssessmentResponse{Approved: approved}, nil
@@ -77,8 +93,7 @@ func main() {
 		}
 	}()
 
-	// Start gRPC server
-	grpcPort := ":666" // Change this port if necessary
+	grpcPort := ":666" 
 	lis, err := net.Listen("tcp", grpcPort)
 	if err != nil {
 		log.Fatalf("Failed to listen on %v: %v", grpcPort, err)

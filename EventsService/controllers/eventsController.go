@@ -52,7 +52,6 @@ func init() {
     fmt.Println("Collection instance is ready")
 }
 
-// ArrangeEvent handles POST requests to arrange an event
 func ArrangeEvent(c *gin.Context) {
 	var ctx, cancel = context.WithCancel(context.Background())
 	defer cancel()
@@ -75,7 +74,6 @@ func ArrangeEvent(c *gin.Context) {
 	c.JSON(http.StatusCreated, newEvent)
 }
 
-// CancelEvent handles DELETE requests to cancel an event
 func CancelEvent(c *gin.Context) {
 	var ctx, cancel = context.WithCancel(context.Background())
 	defer cancel()
@@ -96,7 +94,6 @@ func CancelEvent(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"message": "Event with ID " + id + " has been cancelled"})
 }
 
-// GetAllEvents handles GET requests to fetch all events
 func GetAllEvents(c *gin.Context) {
 	var ctx, cancel = context.WithCancel(context.Background())
 	defer cancel()
@@ -116,9 +113,9 @@ func GetAllEvents(c *gin.Context) {
 
 	c.JSON(http.StatusOK, events)
 }
-
-// InviteStudent handles POST requests to invite a student to an event
 func InviteStudent(c *gin.Context) {
+	log.Printf("Attempting to invite student: %v", c)
+
 	var ctx, cancel = context.WithCancel(context.Background())
 	defer cancel()
 
