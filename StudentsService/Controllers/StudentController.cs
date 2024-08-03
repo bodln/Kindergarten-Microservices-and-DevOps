@@ -111,7 +111,7 @@ public class StudentController : ControllerBase
         }
     }
 
-    [HttpPost("{studentId:int}/Participate/{eventId:string}")]
+    [HttpPost("{studentId:int}/Participate/{eventId}")]
     [Authorize(Roles = "Nanny")]
     public async Task<IActionResult> GradeStudent(int studentId, string eventId)
     {
