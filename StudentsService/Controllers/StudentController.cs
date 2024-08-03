@@ -111,9 +111,9 @@ public class StudentController : ControllerBase
         }
     }
 
-    [HttpPost("{studentId:int}/Participate/{eventId:int}")]
+    [HttpPost("{studentId:int}/Participate/{eventId:string}")]
     [Authorize(Roles = "Nanny")]
-    public async Task<IActionResult> GradeStudent(int studentId, int eventId)
+    public async Task<IActionResult> GradeStudent(int studentId, string eventId)
     {
         string token = HttpContext.Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
         var response = await _studentRepository.Participate(token, studentId, eventId);

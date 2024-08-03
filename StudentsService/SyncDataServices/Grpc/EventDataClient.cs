@@ -12,7 +12,7 @@ namespace StudentsService.SyncDataServices.Grpc
             _configuration = configuration;
         }
 
-        public async Task<bool> Participate(string token, int studentId, int eventId)
+        public async Task<bool> Participate(string token, int studentId, string eventId)
         {
             Console.WriteLine("--> Calling gRPC Service: " + _configuration["GrpcPlatform"]);
 

@@ -100,7 +100,7 @@ namespace StudentsService.Repositories
             return true;
         }
 
-        public async Task<bool> Participate(string token, int studentId, int eventId)
+        public async Task<bool> Participate(string token, int studentId, string eventId)
         {
             return await _eventDataClient.Participate(token, studentId, eventId);
         }
@@ -115,7 +115,7 @@ namespace StudentsService.Repositories
         Task<Student?> UpdateStudent(int id, StudentDTO studentDTO);
         Task<bool> DeleteStudent(int id);
         Task<bool> GradeStudent(int id, int grade, string nannyEmail);
-        Task<bool> Participate(string token, int studentId, int eventId);
+        Task<bool> Participate(string token, int studentId, string eventId);
     }
 
 

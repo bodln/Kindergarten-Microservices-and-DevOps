@@ -2,6 +2,6 @@
 {
     public interface IEventDataClient
     {
-        Task<bool> Participate(string token, int studentId, int eventId);
+        Task<bool> Participate(string token, int studentId, string eventId);
     }
 }
