@@ -1,6 +1,5 @@
 ﻿using Grpc.Net.Client;
-using StudentsService.Protos; // Ensure this namespace matches the one in the generated files
-
+using StudentsService.Protos; 
 namespace StudentsService.SyncDataServices.Grpc
 {
     public class EventDataClient : IEventDataClient

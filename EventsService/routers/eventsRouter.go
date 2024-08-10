@@ -9,7 +9,6 @@ import (
 func EventsRouter() *gin.Engine {
     router := gin.Default()
 
-    // Apply JWT middleware to all routes
     router.Use(middleware.JWTMiddleware())
 
     eventsGroup := router.Group(EventsBaseRoute)

@@ -93,7 +93,6 @@ namespace IdentityManagerServerApi.Controllers
                 tokenHandler.ValidateToken(token, validationParameters, out SecurityToken validatedToken);
                 var jwtToken = (JwtSecurityToken)validatedToken;
 
-                // Token is valid, return token information
                 return Ok(new
                 {
                     Message = "Token is valid",
@@ -102,12 +101,10 @@ namespace IdentityManagerServerApi.Controllers
             }
             catch (SecurityTokenException ex)
             {
-                // Token validation failed
                 return Unauthorized(new { Message = $"Token validation failed: {ex.Message}" });
             }
             catch (Exception ex)
             {
-                // Handle other exceptions
                 return StatusCode(500, new { Message = $"An error occurred: {ex.Message}" });
             }
         }
